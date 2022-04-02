@@ -15,13 +15,13 @@ JOIN tx_out source_tx_out
  AND tx_in.tx_out_index::smallint = source_tx_out.index::smallint
 JOIN tx source_tx 
   ON source_tx_out.tx_id = source_tx.id 
-   WHERE tx.block_id <= 206628
+   WHERE tx.block_id <= 1206628
         and (
           tx.block_id > 180928
           or
             (tx.block_id = 180928 and tx.block_index > 15)
           )
-      AND source_tx.block_id <= 206628
+      AND source_tx.block_id <= 1206628
         and (
           source_tx.block_id > 180928
           or
@@ -32,7 +32,7 @@ JOIN tx source_tx
     "37btjrVyb4KBGrAzVJ382Hxbbd2VBXu3eJG5jZJyBbSeVAQ4SwDxn66eD4rf1dKm89RY5QRt1T3Zf9UyS69CgVb6Eyewp9yjjzn6PBGmnoxyBkfKsC",
     "37btjrVyb4KCFVxvE7HNuAvcJRSaPNAT6mb2o2Wjq73juV3aNoSc3LP5f9sLMrjkLMZL5pTrnBRrhhfCgjfKt6AS2RKkMaVWovdREELHrqibH8xCNh",
     "2cWKMJemoBaivGd3SNWQiFUk9Noc7mbjxX6UQamU2GHG41tE2LvCN3upaK7ZkafY3etRi",
-    "2cWKMJemoBaivGd3SNWQiFUk9Noc7mbjxX6UQamU2GHG41tE2LvCN3upaK7ZkafY3etRi"}')::varchar array)),
+    "37btjrVyb4KCjE4UG8c9qn3WfxJQXKKUSmYuju8GKSTS7tQDe5zS9tJSrgoZ96wKBywHa1NgiZZ9jFwKi14Sfg9ZGkySepAZzVWgdEt7wUkxiDuRyQ"}')::varchar array)),
      -- OR source_tx_out.payment_cred = ANY(($6)::bytea array))
     collateral_transactions as (
       select tx.hash as hash, collateral_tx_in.tx_out_index, collateral_tx_in.id,
@@ -93,9 +93,9 @@ JOIN tx source_tx
        , tx.fee
        , tx.valid_contract
        , tx.script_size
-       -- , (select jsonb_object_agg(key, bytes)
-       --  from tx_metadata
-       --  where tx_metadata.tx_id = tx.id) as metadata
+       , (select jsonb_object_agg(key, bytes)
+        from tx_metadata
+        where tx_metadata.tx_id = tx.id) as metadata
        , tx.block_index as "txIndex"
        , block.block_no as "blockNumber"
        , block.hash as "blockHash"
