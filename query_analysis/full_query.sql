@@ -1,4 +1,5 @@
 set work_mem = '4GB';
+set max_parallel_workers_per_gather = '12';
 explain (analyze, buffers)
 WITH transactions AS (
   SELECT tx.id, tx.hash, address, payment_cred, 
