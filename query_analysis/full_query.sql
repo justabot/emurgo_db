@@ -1,3 +1,4 @@
+set work_mem = '4GB';
 explain (analyze, buffers)
 WITH transactions AS (
   SELECT tx.id, tx.hash, address, payment_cred, 
@@ -18,11 +19,11 @@ JOIN tx source_tx
   ON source_tx_out.tx_id = source_tx.id 
 JOIN block b 
   ON tx.block_id = b.id
-   WHERE block_no <= 6530984
+   WHERE block_no <= 6530002
         and (
-          block_no > 6529984
+          block_no > 6530000
           or
-            (block_no = 6529984 and tx.block_index > 15)
+            (block_no = 6530000 and tx.block_index > 15)
           )
      AND address = ANY(('{
     "37btjrVyb4KDj2x14SC4FUtLhqnHKEtz3YtcFsfqnEkvybLJGyx6kBzX8sv9niQpy2yYKxDbpVYfq8ZzsuMVvmoPL8pCpd1i8c2JZDtPuEf1bAG1Ye",
