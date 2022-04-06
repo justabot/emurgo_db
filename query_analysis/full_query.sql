@@ -1,6 +1,6 @@
 set work_mem = '4GB';
 set max_parallel_workers_per_gather = '12';
-explain (analyze, buffers)
+-- explain (analyze, buffers)
 WITH transactions AS (
   SELECT tx.id, tx.hash, address, payment_cred, 
          source_tx_out.tx_id source_tx_out_tx_id, source_tx.id source_tx_id,
@@ -21,6 +21,7 @@ JOIN tx source_tx
 JOIN block b 
   ON tx.block_id = b.id
    WHERE block_no <= 6530002
+
         and (
           block_no > 6530000
           or
@@ -48,7 +49,7 @@ JOIN block b
             JOIN tx_out source_tx_out 
               ON collateral_tx_in.tx_out_id = source_tx_out.tx_id 
             AND collateral_tx_in.tx_out_index = source_tx_out.index
-            JOIN transactions source_tx 
+            JOIN tx source_tx 
               ON source_tx_out.tx_id = source_tx.id),
     hashes as (
       select distinct hash
@@ -89,7 +90,11 @@ JOIN block b
             on w.addr_id = addr.id
             where addr.hash_raw = any(('{}')::bytea array)
            ) hashes
-    )
+    ),
+    distinct_transactions AS (
+      SELECT DISTINCT tx.id, tx.hash, tx.block_id, tx.fee, tx.valid_contract, 
+             tx.script_size, tx.block_index
+        FROM transactions tx)
   select tx.hash
        , tx.fee
        , tx.valid_contract
@@ -110,7 +115,7 @@ JOIN block b
        , (select json_agg(( inadd_tx.source_tx_out_address
                           , inadd_tx.source_tx_out_value
                           , encode(inadd_tx.source_tx_hash, 'hex')
-                          , tx.tx_out_index
+                          , tx_out_index
                           , (select json_agg(ROW(encode("ma"."policy", 'hex'), encode("ma"."name", 'hex'), "quantity"))
                             from ma_tx_out
                             inner join multi_asset ma on ma_tx_out.ident = ma.id
@@ -150,10 +155,12 @@ JOIN block b
        , (select json_agg(row_to_json(combined_certificates) order by "certIndex" asc)
           from combined_certificates 
           where "txId" = tx.id) as certificates           
-  from transactions tx 
-  JOIN hashes
+  FROM hashes
+  JOIN distinct_transactions tx
     on hashes.hash = tx.hash
   JOIN block
     on block.id = tx.block_id
   LEFT JOIN pool_metadata_ref 
-    on tx.id = pool_metadata_ref.registered_tx_id ;
+    on tx.id = pool_metadata_ref.registered_tx_id 
+    order by block_no asc
+    ;
