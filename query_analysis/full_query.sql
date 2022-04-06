@@ -1,6 +1,6 @@
 set work_mem = '4GB';
 set max_parallel_workers_per_gather = '12';
--- explain (analyze, buffers)
+explain (analyze, buffers)
 WITH transactions AS (
   SELECT tx.id, tx.hash, address, payment_cred, 
          source_tx_out.tx_id source_tx_out_tx_id, source_tx.id source_tx_id,
@@ -49,7 +49,7 @@ JOIN block b
             JOIN tx_out source_tx_out 
               ON collateral_tx_in.tx_out_id = source_tx_out.tx_id 
             AND collateral_tx_in.tx_out_index = source_tx_out.index
-            JOIN tx source_tx 
+            JOIN transactions source_tx 
               ON source_tx_out.tx_id = source_tx.id),
     hashes as (
       select distinct hash
