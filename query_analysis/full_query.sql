@@ -1,6 +1,6 @@
 set work_mem = '4GB';
 set max_parallel_workers_per_gather = '12';
-explain (analyze, buffers)
+-- explain (analyze, buffers)
 WITH transactions AS (
   SELECT tx.id, tx.hash, address, payment_cred, 
          source_tx_out.tx_id source_tx_out_tx_id, source_tx.id source_tx_id,
@@ -21,7 +21,6 @@ JOIN tx source_tx
 JOIN block b 
   ON tx.block_id = b.id
    WHERE block_no <= 6530002
-
         and (
           block_no > 6530000
           or
@@ -115,14 +114,14 @@ JOIN block b
        , (select json_agg(( inadd_tx.source_tx_out_address
                           , inadd_tx.source_tx_out_value
                           , encode(inadd_tx.source_tx_hash, 'hex')
-                          , tx_out_index
+                          , inadd_tx.tx_out_index
                           , (select json_agg(ROW(encode("ma"."policy", 'hex'), encode("ma"."name", 'hex'), "quantity"))
                             from ma_tx_out
                             inner join multi_asset ma on ma_tx_out.ident = ma.id
                             WHERE ma_tx_out."tx_out_id" = inadd_tx.source_tx_out_id)
                           ) order by inadd_tx.id asc) as inAddrValPairs
           FROM transactions inadd_tx
-          where inadd_tx.source_tx_hash = tx.hash) as "inAddrValPairs"
+          where inadd_tx.hash = tx.hash) as "inAddrValPairs"
         , (select json_agg(( inadd_tx.source_tx_out_address
             , inadd_tx.source_tx_out_value
             , encode(inadd_tx.source_tx_hash, 'hex')
