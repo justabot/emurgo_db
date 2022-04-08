@@ -26,15 +26,15 @@ JOIN block b
           or
             (block_no = 6530000 and tx.block_index > 15)
           )
-     AND address = ANY(('{
+     AND (address = ANY(('{
     "37btjrVyb4KDj2x14SC4FUtLhqnHKEtz3YtcFsfqnEkvybLJGyx6kBzX8sv9niQpy2yYKxDbpVYfq8ZzsuMVvmoPL8pCpd1i8c2JZDtPuEf1bAG1Ye",
     "37btjrVyb4KBGrAzVJ382Hxbbd2VBXu3eJG5jZJyBbSeVAQ4SwDxn66eD4rf1dKm89RY5QRt1T3Zf9UyS69CgVb6Eyewp9yjjzn6PBGmnoxyBkfKsC",
     "37btjrVyb4KCFVxvE7HNuAvcJRSaPNAT6mb2o2Wjq73juV3aNoSc3LP5f9sLMrjkLMZL5pTrnBRrhhfCgjfKt6AS2RKkMaVWovdREELHrqibH8xCNh",
     "2cWKMJemoBaivGd3SNWQiFUk9Noc7mbjxX6UQamU2GHG41tE2LvCN3upaK7ZkafY3etRi",
     "37btjrVyb4KCjE4UG8c9qn3WfxJQXKKUSmYuju8GKSTS7tQDe5zS9tJSrgoZ96wKBywHa1NgiZZ9jFwKi14Sfg9ZGkySepAZzVWgdEt7wUkxiDuRyQ",
     "addr1qxalf8qtfkthyqp30gp65p24n2kdv8syn5q8r3edesv2vyllc0w6t93h96hgf3pe59rykldn48qwlq662pwf9gcewqdqtqdf99",
-    "addr1vy740r73x2w3du2xxt76cs4hdml4zw2c5h7tddcyf3jauys9tyns4"}')::varchar array)),
-     -- OR source_tx_out.payment_cred = ANY(($6)::bytea array))
+    "addr1vy740r73x2w3du2xxt76cs4hdml4zw2c5h7tddcyf3jauys9tyns4"}')::varchar array)
+     OR source_tx_out.payment_cred = ANY('{}'::bytea array))),
     collateral_transactions as (
       select tx.hash as hash, collateral_tx_in.tx_out_index, collateral_tx_in.id,
          source_tx_out.tx_id source_tx_out_tx_id, source_tx.id source_tx_id,
