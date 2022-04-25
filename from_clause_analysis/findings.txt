@@ -1,0 +1,8 @@
+thomas wallet full sync goes from 15 seconds to 3 seconds
+paymentcred fullsync goes from 22 seconds to 18 seconds
+
+incremental syncs will not query as much data, so the main of these queries pulling in to much data is improved with more filters in the where clauses greatly, and the full syncs are also improved marginally.
+
+incremental from 22 seconds to 16 seconds and using much less server resources. These results are on a server with no traffic, so I expect much better results when more queries are running.
+
+addresses from 21 seconds to 13 seconds.
