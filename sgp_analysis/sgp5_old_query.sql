@@ -1,5 +1,5 @@
 https://explain.depesz.com/s/Cmag#html
-Time: 18550.525 ms (00:18.551)
+Time: 17162.882 ms (00:17.163)
 explain (analyze, buffers)
 with
     hashes as (
@@ -775,5 +775,5 @@ with
           (block.block_no = 0 and tx.block_index > 15)
         ) 
   order by block.time asc, tx.block_index asc
-  -- limit 500
+   limit 500
   ;
