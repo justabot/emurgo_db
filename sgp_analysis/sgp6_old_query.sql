@@ -1,3 +1,5 @@
+https://explain.depesz.com/s/Ie46
+Time: 6718.056 ms (00:06.718)
 explain (analyze, buffers)
 with
     hashes as (
