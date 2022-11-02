@@ -19,7 +19,7 @@ conn = psycopg2.connect(
 cur = conn.cursor(cursor_factory=RealDictCursor)
 os.environ('MATAMO_TOKEN')
 request_date = '2022-06-22'
-url = "https://analytics.emurgo-rnd.com/";
+url = "https://xxx/";
 url += "?module=API&method=Actions.getOutlinks";
 url += "&idSite=1&period=day&date=%(d)s"% {"d": request_date};
 url += "&format=JSON&filter_limit=10";

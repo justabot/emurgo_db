@@ -7,3 +7,4 @@ best_block bigint not null,
 version bigint not null,
 created timestamptz default now() not null
 );
+GRANT SELECT ON reporting.outlinks_day TO redash;
